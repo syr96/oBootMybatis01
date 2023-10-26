@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.oBootMybatis01.EmpMapper">
+
+	<select id="empTotal" resultType="int">
+		select Count(*) FROM emp
+	</select>
+	
+	<select id="tkEmpListAll2" parameterType="Emp" resultType="Emp">
+		SELECT *
+		FROM
+		(
+				SELECT rownum rn, a.*
+				FROM
+							(select * from emp order by empno) a
+		)
+		WHERE	rn BETWEEN #{start} and #{end}
+	</select>
+	
+	<select id="tkEmpListAll" parameterType="Emp" resultType="Emp">
+	<![CDATA[
+		SELECT *
+		FROM
+		(
+				SELECT rownum rn, a.*
+				FROM
+							(select * from emp order by empno) a
+		)
+		WHERE	rn >= #{start} 
+		and 	rn <= #{end}
+		]]>
+	</select>
+	
+	<select id="tkEmpSelOne" parameterType="int" resultType="Emp">
+		Select * From emp Where empno = #{empno}
+	</select>
+	
+	<update id="tkEmpUpdate" parameterType="Emp">
+		Update emp
+		SET ename = #{ename}, job = #{job}, mgr = #{mgr}, sal = #{sal},  hiredate = #{hiredate} , 
+		<if test="#{comm}!=null"> comm = #{comm}, </if>
+			deptno = #{deptno}
+		WHERE empno = #{empno}
+	</update>
+	
+	<select id="tkSelectManager" resultType="Emp">
+		Select *
+		From emp
+		Where empno in (select mgr from emp)
+	</select>
+	
+	<insert id="tkEmpInsert" parameterType="Emp">
+		Insert Into emp values(#{empno},  #{ename}, #{job}, #{mgr},
+							  #{hiredate}, #{sal},  #{comm}, #{deptno})
+	</insert>
+	
+	<delete id="tkEmpDelete" parameterType="int">
+		Delete From emp
+		Where empno = #{empno}
+	</delete>
+	
+	<select id="tkEmpSearchList3" parameterType="Emp" resultType="Emp">
+		SELECT *
+		From
+		(
+			Select rownum rn, a.*
+			From
+				(Select * from emp order by empno) a
+		)
+		Where rn Between #{start} and #{end}
+		<choose>
+			<when test="search == 's_job'">
+				And job like '%' || #{keyword} || '%'
+			</when>
+			<when test="search == 's_ename'">
+				And ename like '%' || #{keyword} || '%'
+			</when>
+			<otherwise>
+				And job like '%'
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="condEmpTotal" parameterType="Emp" resultType="int">
+			select Count(*) FROM emp
+			
+		<choose>
+			<when test="search == 's_job'">
+				Where job like '%' || #{keyword} || '%'
+			</when>
+			<when test="search == 's_name'">
+				Where ename like '%' || #{keyword} || '%'
+			</when>
+			<otherwise>
+				Where job like '%'
+			</otherwise>
+		</choose>
+	</select>
+</mapper>
