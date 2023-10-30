@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.oracle.oBootMybatis01.model.Dept;
 import com.oracle.oBootMybatis01.model.DeptVo;
@@ -344,5 +345,17 @@ public class EmpController {
 		List<Emp> listEmp = es.listEmp(emp);
 		model.addAttribute("listEmp", listEmp);
 		return "listEmpAjaxForm2";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "transactionInsertUpdate")
+	public String transactionInsertUpdate(Emp emp, Model model) {
+		System.out.println("EmpController transactionInsertUpdate Start...");
+		// member Insert 성공과 실패
+		int returnMember = es.transactionInsertUpdate();
+		System.out.println("EmpController transactionInsertUpdate returnMember => " + returnMember);
+		String returnMemberString = String.valueOf(returnMember);
+		
+		return returnMemberString;
 	}
 }

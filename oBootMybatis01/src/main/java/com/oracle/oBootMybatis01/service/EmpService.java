@@ -22,4 +22,5 @@ public interface EmpService {
 	List<EmpDept>	listEmpDept();
 	void 			insertDept(DeptVo deptVo);
 	void 			selListDept(HashMap<String, Object> map);
+	int 			transactionInsertUpdate();
 }

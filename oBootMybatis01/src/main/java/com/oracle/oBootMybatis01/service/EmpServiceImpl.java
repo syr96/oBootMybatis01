@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.oracle.oBootMybatis01.dao.DeptDao;
 import com.oracle.oBootMybatis01.dao.EmpDao;
+import com.oracle.oBootMybatis01.dao.Member1Dao;
 import com.oracle.oBootMybatis01.model.Dept;
 import com.oracle.oBootMybatis01.model.DeptVo;
 import com.oracle.oBootMybatis01.model.Emp;
@@ -17,8 +18,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor // EmpDao(또는 DeptDao) 생성자 + autowired
 public class EmpServiceImpl implements EmpService {
-	private final EmpDao ed; // 어노테이션 생성자 DI방식
-	private final DeptDao dd;
+	private final EmpDao 	 ed; // 어노테이션 생성자 DI방식
+	private final DeptDao 	 dd;
+	private final Member1Dao md;
 	
 	@Override
 	public int totalEmp() {
@@ -120,6 +122,13 @@ public class EmpServiceImpl implements EmpService {
 	public void selListDept(HashMap<String, Object> map) {
 		System.out.println("EmpServiceImpl selListDept Start...");
 		dd.selListDept(map);
+	}
+
+	@Override
+	public int transactionInsertUpdate() {
+		System.out.println("EmpServiceImpl transactionInsertUpdate Start...");
+//		return md.transactionInsertUpdate();	// transaction X
+		return md.transactionInsertUpdate3();	// transaction O
 	}
 	
 
