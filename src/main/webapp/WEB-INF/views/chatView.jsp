@@ -51,11 +51,11 @@
 </head>
 <script type="text/javascript">
     // web Socket
-	var ws;
+	var ws;  // 전역변수로쓰기위해 함수 밖에 선언
 
-	function wsOpen(){
+	function wsOpen(){ // 웹소켓 오픈 메소드
 		console.log("wsOpen  location.host: " + location.host);
-        var wsUri  = "ws://" + location.host + "${pageContext.request.contextPath}/chating";
+        var wsUri  = "ws://" + location.host + "${pageContext.request.contextPath}/chating"; // uri를 잡아줌
         // WebSocket 프로토콜을 사용하여 통신하기 위해서는 WebSocket객체를 생성. 
         // 객체는 자동으로 서버로의 연결
  		ws = new WebSocket(wsUri);
@@ -71,7 +71,7 @@
 		ws.onopen = function(data){
 			console.log("wsEvt  소켓이 열리면 초기화 세팅하기..");
 		}	
-		//메시지를 받으면 동작
+		// 메시지를 받으면 동작 (얘는 약속임 무조건 동작)
        ws.onmessage = function(data) {
 			var msg = data.data;
 			var memberSave = false;
@@ -158,7 +158,7 @@
      
     // User 등록  Message 전송       saveStatus --> Create / Delete
     function sendUser(saveStatus) {
-		var userOption ={
+		var userOption ={		// json으로 보내는데 그 보내는 형식
 				type       : "userSave",
 				sessionId  : $("#sessionId").val(),
 				userName   : $("#userName").val(),
@@ -180,7 +180,7 @@
     
     
 
-    function chatName(){
+function chatName(){
     	alert("chatName Start..");
 		var userName = $("#userName").val();
 		console.log("chatName  userName: " + userName);
@@ -188,7 +188,7 @@
 			alert("사용자 이름을 입력해주세요.");
 			$("#userName").focus();
 		}else{
-			wsOpen();
+			wsOpen(); // 웹 소켓 오픈(메소드)
 			$("#meName").append('나의이름:'+userName); 
 			$("#yourName").hide();
 			$("#yourMsg").show();

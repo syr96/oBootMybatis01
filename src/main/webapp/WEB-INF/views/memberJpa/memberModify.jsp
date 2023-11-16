@@ -16,21 +16,14 @@
   <input type="hidden" name="id" value="${member.id }">
          
   <table>  
-	<tr>
-		<th>회원번호</th>
-		<td>${member.id  }</td>
-	</tr>
-	<tr>
-		<th>이름</th>
-		<td><input type="text" name="name" required="required" value="${member.name }" ></td>
-	</tr>
-	<tr>
-		<th>비밀번호</th>
-		<td><input type="text" name="password" required="required" value="${member.password }" ></td>
-	</tr>
+	<tr><th>회원번호</th><td>${member.id  }</td></tr>
+	<tr><th>이름</th><td>
+	    <input type="text" name="name" 
+		required="required" value="${member.name }" ></td></tr>
+<%-- 	<tr><th>비밀번호</th><td><input type="text" name="password" value="${member.password }"></td> </tr> --%>
 	<tr><td colspan="2">
 	   <input type="submit" value="확인">
-	</td>
+	   </td>
 	</tr>
   </table>
 </form>

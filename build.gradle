@@ -4,7 +4,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
-group = 'com.oracle'
+group = 'com.example'
 version = 'version1.0'
 
 java {
@@ -31,8 +31,8 @@ dependencies {
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.1'
 	
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     implementation 'javax.servlet:jstl'
-    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 	
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc8'

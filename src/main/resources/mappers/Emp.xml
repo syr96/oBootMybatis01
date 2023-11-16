@@ -2,100 +2,115 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.oracle.oBootMybatis01.EmpMapper">
+<mapper namespace="com.example.oBootMybatis01.EmpMapper">
 
 	<select id="empTotal" resultType="int">
-		select Count(*) FROM emp
+		SELECT COUNT(*) FROM emp	
 	</select>
 	
 	<select id="tkEmpListAll2" parameterType="Emp" resultType="Emp">
-		SELECT *
-		FROM
-		(
+		SELECT * 
+		FROM 
+			(
 				SELECT rownum rn, a.*
 				FROM
-							(select * from emp order by empno) a
-		)
-		WHERE	rn BETWEEN #{start} and #{end}
+					(SELECT * FROM emp ORDER BY empno) a
+			)
+		WHERE rn BETWEEN #{start} AND #{end}
+		
 	</select>
 	
+	<!--emp 전체 SELECT  -->
+	<!-- rn 이 10~20 이렇게 조회가 안됨 (1부터해야함 무조건)  -->
+	<!-- 따라서 1.사번순정렬 -> 2. rownum으로 뽑고 서브쿼리로만듬 -> 3. 그걸 조건에맞게 10~20으로 뽑음 으로 진행 -->
 	<select id="tkEmpListAll" parameterType="Emp" resultType="Emp">
-	<![CDATA[
-		SELECT *
-		FROM
+		<![CDATA[
+		SELECT * 
+		FROM 
 		(
-				SELECT rownum rn, a.*
-				FROM
-							(select * from emp order by empno) a
+			SELECT rownum rn, a.*
+			FROM
+				(SELECT * FROM emp ORDER BY empno) a
 		)
-		WHERE	rn >= #{start} 
-		and 	rn <= #{end}
+		WHERE rn >= #{start} 
+		AND   rn <= #{end}
 		]]>
 	</select>
 	
 	<select id="tkEmpSelOne" parameterType="int" resultType="Emp">
-		Select * From emp Where empno = #{empno}
+		SELECT 	*
+		FROM 	emp
+		WHERE	empno = #{empno}
 	</select>
 	
-	<update id="tkEmpUpdate" parameterType="Emp">
-		Update emp
-		SET ename = #{ename}, job = #{job}, mgr = #{mgr}, sal = #{sal},  hiredate = #{hiredate} , 
-		<if test="#{comm}!=null"> comm = #{comm}, </if>
-			deptno = #{deptno}
-		WHERE empno = #{empno}
+	<update id="tkEmpUpdate" parameterType="Emp" >
+		UPDATE emp 
+		SET	   ename=#{ename}, 
+			   job= #{job}, 
+			   mgr=#{mgr}, 
+			   sal=#{sal}, 
+			   hiredate = #{hiredate}, 
+			   <if test="#{comm}!=null"> comm=#{comm}, </if>
+			   deptno=#{deptno}
+ 		WHERE  empno = #{empno}
 	</update>
 	
 	<select id="tkSelectManager" resultType="Emp">
-		Select *
-		From emp
-		Where empno in (select mgr from emp)
+		SELECT  *
+		FROM    emp
+		WHERE   empno In ( SELECT mgr
+        		           FROM   emp)	
 	</select>
 	
-	<insert id="tkEmpInsert" parameterType="Emp">
-		Insert Into emp values(#{empno},  #{ename}, #{job}, #{mgr},
-							  #{hiredate}, #{sal},  #{comm}, #{deptno})
-	</insert>
+	<select id="insertEmp"  parameterType="Emp" >
+		INSERT INTO emp VALUES(#{empno}, #{ename}, #{job}, #{mgr}, #{hiredate}, #{sal}, #{comm}, #{deptno})
+	</select>
 	
-	<delete id="tkEmpDelete" parameterType="int">
-		Delete From emp
-		Where empno = #{empno}
+	<delete id="deleteEmp" parameterType="int" >
+		DELETE 
+		FROM	EMP
+		WHERE	empno = #{empno}
 	</delete>
 	
 	<select id="tkEmpSearchList3" parameterType="Emp" resultType="Emp">
 		SELECT *
-		From
-		(
-			Select rownum rn, a.*
-			From
-				(Select * from emp order by empno) a
-		)
-		Where rn Between #{start} and #{end}
-		<choose>
-			<when test="search == 's_job'">
-				And job like '%' || #{keyword} || '%'
-			</when>
-			<when test="search == 's_ename'">
-				And ename like '%' || #{keyword} || '%'
-			</when>
-			<otherwise>
-				And job like '%'
-			</otherwise>
-		</choose>
+		FROM (
+				SELECT rownum rn, a.*
+				FROM (
+						SELECT 		*
+						FROM		emp
+						<choose>
+							<when test="search == 's_job'">
+								WHERE job   LIKE '%' || #{keyword} || '%'
+							</when>
+							<when test="search == 's_ename'">
+								WHERE ename LIKE '%' || #{keyword} || '%'
+							</when>
+							<otherwise>
+								WHERE job   LIKE '%'
+							</otherwise>
+						</choose>
+						ORDER BY empno
+					 ) a
+			 )
+		WHERE rn BETWEEN #{start} AND #{end}	
 	</select>
 	
 	<select id="condEmpTotal" parameterType="Emp" resultType="int">
-			select Count(*) FROM emp
-			
+		SELECT COUNT(*) FROM emp	
 		<choose>
 			<when test="search == 's_job'">
-				Where job like '%' || #{keyword} || '%'
+				WHERE job   LIKE '%' || #{keyword} || '%'
 			</when>
-			<when test="search == 's_name'">
-				Where ename like '%' || #{keyword} || '%'
+			<when test="search == 's_ename'">
+				WHERE ename LIKE '%' || #{keyword} || '%'
 			</when>
 			<otherwise>
-				Where job like '%'
+				WHERE job   LIKE '%'
 			</otherwise>
 		</choose>
+		
 	</select>
+	
 </mapper>
+
